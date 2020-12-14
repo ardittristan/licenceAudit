@@ -1,0 +1,22 @@
+{
+  "name": "licenceaudit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ardittristan",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/plugin-retry": "^3.0.6",
+    "@octokit/plugin-throttling": "^3.3.4",
+    "@octokit/rest": "^18.0.12",
+    "dotenv": "^8.2.0",
+    "encodeurl": "^1.0.2",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.2.0",
+    "for-async-each": "^1.0.1",
+    "multer": "^1.4.2"
+  }
+}

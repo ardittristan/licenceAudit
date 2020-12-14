@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Licence Checker</title>
+    <link rel="shortcut icon" href="https://avatars1.githubusercontent.com/u/71292812">
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+      table {
+        border-spacing: 8px 4px;
+        font-family: 'Roboto', sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="form" action="/send" method="POST" enctype="multipart/form-data">
+      <input type="text" placeholder="owner*" name="owner" required />
+      <input type="text" placeholder="repo*" name="repo" required />
+      <input type="text" placeholder="path (LICENSE)" />
+      <button type="submit">Submit</button>
+    </form>
+    <table>
+    {{#each checkedRepos as |repo|}}
+      <tr>
+        <td>
+          <a href="{{repo.url}}">View Data</a>
+        </td>
+        <td>
+          <a href="https://github.com/{{repo.author}}/{{repo.name}}">{{repo.author}}/{{repo.name}}</a>
+        </td>
+      </tr>
+    {{/each}}
+    </table>
+  </body>
+</html>

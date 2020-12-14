@@ -136,7 +136,7 @@ app.get("/", function (req, res) {
 
 app.post("/send", upload.none(), async function (req, res) {
   try {
-    await getData(req.body.owner, req.body.repo, req.body.path);
+    await getData(req.body.owner, req.body.repo, req.body.path?.length > 0 ? req.body.path : undefined);
     res.redirect(req.get("referer"));
   } catch {
     res.sendStatus(500);

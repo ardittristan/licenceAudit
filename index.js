@@ -136,7 +136,7 @@ app.get("/", function (req, res) {
 
 app.post("/send", upload.none(), async function (req, res) {
   try {
-    const repo = req.body.url.match(/(?<=\/)([^\/]+?\/[^\/]+?)(?=($|\/$))/g)
+    const repo = req.body.url.match(/(?<=\/)([^\/]+?\/[^\/]+?)(?=($|\/$))/g)[0].split("/")
     await getData(repo[0], repo[1], req.body.path?.length > 0 ? req.body.path : undefined);
     res.redirect(req.get("referer"));
   } catch {

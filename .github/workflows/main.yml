@@ -24,7 +24,7 @@ jobs:
         echo ::set-output name=local::$(cat ./.env.example)
     - name: Stop if different
       if: steps.get-env-example.outputs.remote != steps.get-env-example.outputs.local
-      uses: potiuk/cancel-workflow-runs@master
+      uses: potiuk/cancel-workflow-runs@v4_7
       with:
         cancelMode: self
         token: ${{ secrets.GITHUB_TOKEN }}
@@ -38,7 +38,7 @@ jobs:
         local_path: './*'
         remote_path: ${{ secrets.SSH_FILE_PATH }}
     - name: Update and restart Node process
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@v0.1.4
       with:
         host: ${{ secrets.SSH_HOSTNAME }}
         username: ${{ secrets.SSH_USERNAME }}

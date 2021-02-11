@@ -1,0 +1,51 @@
+name: amazon aws CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_KEY }}
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+    - name: Get current env file
+      shell: bash
+      id: get-env-example
+      run: |
+        echo ::set-output name=remote::$(ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOSTNAME }} "cat ${{ secrets.SSH_FILE_PATH }}.env.example")
+        echo ::set-output name=local::$(cat ./.env.example)
+    - name: Stop if different
+      if: steps.get-env-example.outputs.remote != steps.get-env-example.outputs.local
+      uses: potiuk/cancel-workflow-runs@master
+      with:
+        cancelMode: self
+        token: ${{ secrets.GITHUB_TOKEN }}
+        selfPreservation: false
+    - name: SFTP Deploy
+      uses: wlixcc/SFTP-Deploy-Action@1.1
+      with:
+        username: ${{ secrets.SSH_USERNAME }}
+        server: ${{ secrets.SSH_HOSTNAME }}
+        ssh_private_key: ${{ secrets.SSH_KEY }}
+        local_path: './*'
+        remote_path: ${{ secrets.SSH_FILE_PATH }}
+    - name: Update and restart Node process
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOSTNAME }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          export NVM_DIR=~/.nvm
+          source ~/.nvm/nvm.sh
+          ${{ secrets.NPM_PATH }}npm install --prefix ${{ secrets.SSH_FILE_PATH }}
+          mkdir -p ${{ secrets.SSH_FILE_PATH }}/watch
+          date > ${{ secrets.SSH_FILE_PATH }}/watch/trigger.txt
